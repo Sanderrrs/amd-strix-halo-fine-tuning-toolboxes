@@ -1,4 +1,4 @@
-# Strix-rocm-all
+# Strix-rocm-all - ROCm based apps for Ryzen AI 395+ Max
 
 **Install ROCm based apps for Strix Halo - Ryzen AI 395+ Max**
 
