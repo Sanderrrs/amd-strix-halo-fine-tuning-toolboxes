@@ -1,15 +1,21 @@
-# Strix-rocm-all - ROCm based apps for Ryzen AI 395+ Max
+# LLM Fine Tuning Toolboxes for Ryzen AI 395+ Max
 
-**Install ROCm based apps for Strix Halo - Ryzen AI 395+ Max**
+Based on original idea from - https://github.com/kyuz0/amd-strix-halo-toolboxes
 
-This setup starts a barebones Ubuntu 24.04 container and installs all dependencies in it. 
+**ROCm based Unsloth Fine Tuning for Strix Halo - Ryzen AI 395+ Max**
 
-As of now all the dependencies are cached in host but container isn't imaged. I will image the container and share at a later stage.
+These are Ubuntu 24.04 based toolboxes for running Unsloth on Strix Halo machines.
+
+Comes in 2 variants
+
+1. Unsloth only - Tag `unsloth-latest`
+2. Unsloth + llama.cpp - Tag `all-latest`
 
 ## Pre-requistes.
 
 - A Ryzen AI 395+ Max machine
-- Ubuntu 24.04 or newer
+- Linux ( Tested on Ubuntu )
+- Podman-Toolbox installed ( sudo apt install podman-toolbox )
 - Docker
 
 ## Host Configuration
@@ -24,7 +30,38 @@ amd_iommu=off amdttm.pages_limit=33554432 ttm.pages_limit=33554432 amdgpu.gttsiz
 3. Save by Ctrl + x, Y 
 3. IMPORTANT: Shutdown **Do Not Restart**. I have seen issues with setting not applying once.
 
-### Caching
+### UDev
+
+If you want to run toolbox as non-sudo user, add the following to `/etc/udev/rules.d/99-amd-kfd.rules` file.
+
+```
+SUBSYSTEM=="kfd", GROUP="render", MODE="0666", OPTIONS+="last_rule"
+SUBSYSTEM=="drm", KERNEL=="card[0-9]*", GROUP="render", MODE="0666", OPTIONS+="last_rule"
+```
+
+Then run
+
+```
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=kfd --action=change
+sudo udevadm trigger --subsystem-match=drm --action=change
+```
+
+Copy paste script below in shell to do this automated
+
+```
+sudo tee /etc/udev/rules.d/99-amd-kfd.rules > /dev/null <<EOF
+SUBSYSTEM=="kfd", GROUP="render", MODE="0666", OPTIONS+="last_rule"
+SUBSYSTEM=="drm", KERNEL=="card[0-9]*", GROUP="render", MODE="0666", OPTIONS+="last_rule"
+EOF
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=kfd --action=change
+sudo udevadm trigger --subsystem-match=drm --action=change
+```
+
+
+
+### Caching - Advanced On host use case
 
 Apart from few initial binaries, almost all downloaded packages are cached in `cache` folder in the host. 
 
@@ -33,69 +70,56 @@ Anything installed with `pip` or `apt install` will automatically be cached and 
 The `/cache/root` folder is mounted to `/root/.cache`. This helps to cache models downloaded in the container. Also makes container re-install very quick
 
 
-## Running
+## Running ( Ubuntu / Debian commands)
 
-### Downloading this repo
-
-```
-git clone https://github.com/shantur/strix-rocm-all
-cd strix-rocm-all
-```
-
-### Starting container
-
-Run command below. This should land you in the container.
-```
-./start-container.sh
-```
-### Base Packages
-
-Run first before installing anything
-```
-./01-install-packages.sh
-```
-
-### Installing tools
-
-Run following to list all possible commands
-```
-make help
-```
-Shows like below
+### Install Toolbox
 
 ```
-root@4c73165ad421:/strix-rocm-all# make help
-Available targets:
-  all: Installs everything
-  bitsandbytes: Install bitsandbytes from source
-  flash-attn: Install flash-attn from source
-  help: Prints all available targets
-  install-packages: Installs required packages
-  llama-cpp: Installs llama.cpp from source
-  pytorch: Installs torch torchvision torchaudio pytorch-triton-rcom from ROCm nightly
-  rocWMMA: Installs rocWMMA library from source
-  theRock: Installs ROCm in /opt/rocm from theRock Nightly
-  unsloth: Installs unsloth from source
+sudo apt install podman-toolbox
 ```
 
-### Installing unsloth
+### Creating Toolbox - Unsloth
+
+Run command below. This should start your toolbox named - 'toolbox-unsloth'
 ```
-make unsloth
+toolbox create toolbox-unsloth --image docker.io/shantur/amd-strix-halo-fine-tuning-toolboxes
+```
+### Creating Toolbox - All Tools
+
+Run command below. This should start your toolbox named - 'toolbox-unsloth'
+```
+toolbox create toolbox-all --image docker.io/shantur/amd-strix-halo-fine-tuning-toolboxes
 ```
 
-### Installing llama-cpp
+### Entering Toolbox
+Following command will land you in toolbox
 ```
-make llama-cpp
+toolbox enter toolbox-unsloth
+```
+or
+```
+toolbox enter toolbox-all
 ```
 
-Others can be installed similarly
-
-## Running Tools
-
-All python based tools are installed in the `/usr/local/lib/python/` and all binary utils are installed in the PATH.
-
-If any tool complain of any missing libary, run this command first
+### Running - Unsloth
+```
+python -c 'import unsloth'
+```
+Looks like
+```
+shantur@toolbox:~/strix-rocm-all$ python -c 'import unsloth'
+🦥 Unsloth: Will patch your computer to enable 2x faster free finetuning.
+Unsloth: Your Flash Attention 2 installation seems to be broken?
+A possible explanation is you have a new CUDA version which isn't
+yet compatible with FA2? Please file a ticket to Unsloth or FA2.
+We shall now use Xformers instead, which does not have any performance hits!
+We found this negligible impact by benchmarking on 1x A100.
+🦥 Unsloth Zoo will now patch everything to make training faster!
 
 ```
-source /etc/profile/rocm-envs.sh
+
+### Running - llama.cpp
 ```
+llama-cli --list-devices
+```
+
