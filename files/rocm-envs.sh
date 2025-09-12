@@ -25,6 +25,6 @@ export CPATH="$ROCM_PATH/include:\$CPATH"
 export PKG_CONFIG_PATH="$ROCM_PATH/lib/pkgconfig:\$PKG_CONFIG_PATH"
 
 # Set debugging and device variables
-export AMD_SERIALIZE_KERNEL="3"
-export HIP_VISIBLE_DEVICES="0"
+# export AMD_SERIALIZE_KERNEL="3"
+# export HIP_VISIBLE_DEVICES="0"
 export HIP_ARCH="gfx1151"  # Strix Halo architecture
