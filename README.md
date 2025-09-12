@@ -89,3 +89,13 @@ make llama-cpp
 ```
 
 Others can be installed similarly
+
+## Running Tools
+
+All python based tools are installed in the `/usr/local/lib/python/` and all binary utils are installed in the PATH.
+
+If any tool complain of any missing libary, run this command first
+
+```
+source /etc/profile/rocm-envs.sh
+```

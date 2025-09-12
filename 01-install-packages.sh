@@ -19,7 +19,6 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install
     python3-dev \
     python3-pip \
     python-is-python3 \
-    build-essential \
     git git-lfs \
     ninja-build \
     cmake \
@@ -33,23 +32,9 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install
     libcurl4t64 \
     libcurl4-openssl-dev \
     libtool \
-    # libegl1-mesa-dev \
-    # g++ \
-    # gfortran \
-    # rocm7.0.0 \
-    # rocm-hip-sdk7.0.0 \
-    # hipcc7.0.0 \
-    # rocm-cmake7.0.0 \
-    # rocm-dev7.0.0 \
-    # rocm7.0.0 \
-    # rocm-device-libs7.0.0 \
-
+    build-essential \
 
 groupadd -g 109 render
-
-export PIP_BREAK_SYSTEM_PACKAGES=1
-
-echo "export PIP_BREAK_SYSTEM_PACKAGES=1" > envVars
 
 mkdir -p work-area
 

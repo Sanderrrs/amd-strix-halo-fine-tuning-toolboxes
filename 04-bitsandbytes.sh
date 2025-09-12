@@ -8,16 +8,15 @@ pip install packaging
 
 cd work-area/bitsandbytes/
 
-. ../../envVars
+. /etc/profile.d/rocm-envs.sh 
 
 cmake \
     -DCOMPUTE_BACKEND=hip \
     -DBNB_ROCM_ARCH="gfx1151" \
-    -Dhip_HIPCONFIG_EXECUTABLE=/opt/rocm/bin/hipconfig \
     -S . \
     --fresh
 make
-export PATH=/opt/rocm/bin:$PATH
+
 pip install . --no-deps
 
 cd -
