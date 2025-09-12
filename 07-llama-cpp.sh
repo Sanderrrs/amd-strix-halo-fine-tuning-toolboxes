@@ -3,7 +3,9 @@ cd work-area/llama.cpp
 
 . /etc/profile.d/rocm-envs.sh 
 
-cmake -S . -B build \
+HIPCXX="$(hipconfig -l)/clang" \
+    HIP_PATH="$(hipconfig -R)" \
+    cmake -S . -B build \
     -DGGML_HIPBLAS=on \
     -DGGML_HIP=ON \
     -DAMDGPU_TARGETS=gfx1151 \
@@ -13,7 +15,7 @@ cmake -S . -B build \
     && cmake --build build --config Release -t install -- -j 16
 
 
-echo "export GGML_CUDA_ENABLE_UNIFIED_MEMORY=1" >> . /etc/profile.d/rocm-envs.sh 
+echo "export GGML_CUDA_ENABLE_UNIFIED_MEMORY=1" >> /etc/profile.d/rocm-envs.sh 
 
 cd -
 
