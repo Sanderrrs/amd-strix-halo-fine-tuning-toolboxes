@@ -1,5 +1,7 @@
 FROM quay.io/toolbx/ubuntu-toolbox:25.04
 
+ARG FLAVOR=unsloth
+
 RUN mkdir -p /opt/strix-rocm-all/files
 
 COPY *.sh *.patch Makefile \
@@ -12,7 +14,7 @@ WORKDIR /opt/strix-rocm-all
 # RUN find .
 
 RUN ./01-install-packages.sh NO_CACHING \
-    && make unsloth \
+    && make $FLAVOR \
     && make clean \
     && cp files/99-toolbox-banner.sh /etc/profile.d/ \
     && chmod 0644 /etc/profile.d/99-toolbox-banner.sh 

@@ -15,6 +15,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flavor: [unsloth, all]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,9 +54,9 @@ jobs:
         with:
           images: docker.io/${{ env.IMAGE_REPO }}
           tags: |
-            type=raw,value=${{ github.event.inputs.tag }}
-            type=sha
-            type=raw,value={{date 'YYYYMMDD-HHmmss'}}
+            type=raw,value=${{ matrix.flavor }}-${{ github.event.inputs.tag }}
+            type=${{ matrix.flavor }}-sha
+            type=raw,value=${{ matrix.flavor }}-{{date 'YYYYMMDD-HHmmss'}}
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
@@ -69,3 +72,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
           sbom: false
+          build-args: |
+            FLAVOR=${{ matrix.flavor }}
