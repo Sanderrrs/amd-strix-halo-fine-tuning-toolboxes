@@ -55,7 +55,7 @@ jobs:
           images: docker.io/${{ env.IMAGE_REPO }}
           tags: |
             type=raw,value=${{ matrix.flavor }}-${{ github.event.inputs.tag }}
-            type=${{ matrix.flavor }}-sha
+            type=raw,value=${{ matrix.flavor }}-${{ github.sha }}
             type=raw,value=${{ matrix.flavor }}-{{date 'YYYYMMDD-HHmmss'}}
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
