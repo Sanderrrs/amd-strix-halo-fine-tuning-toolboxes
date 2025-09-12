@@ -1,7 +1,11 @@
 git clone https://github.com/Dao-AILab/flash-attention.git work-area/flash-attention
 cd work-area/flash-attention
 
+export PIP_BREAK_SYSTEM_PACKAGES=1
+
 . /etc/profile.d/rocm-envs.sh 
+
+pip install packaging
 
 FLASH_ATTENTION_TRITON_AMD_ENABLE="TRUE" python setup.py install
 

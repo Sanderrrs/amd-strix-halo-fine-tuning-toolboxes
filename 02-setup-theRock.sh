@@ -32,4 +32,4 @@ rocm-sdk path --cmake
 # mkdir /opt
 ln -s `rocm-sdk path --root` /opt/rocm
 
-cp files/rocm-envs.sh /etc/profile.d/
+cp -v files/rocm-envs.sh /etc/profile.d/
