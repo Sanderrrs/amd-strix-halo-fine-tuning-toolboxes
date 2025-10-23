@@ -82,13 +82,13 @@ sudo apt install podman-toolbox
 
 Run command below. This should start your toolbox named - 'toolbox-unsloth'
 ```
-toolbox create toolbox-unsloth --image docker.io/shantur/amd-strix-halo-fine-tuning-toolboxes
+toolbox create toolbox-unsloth --image docker.io/shantur/amd-strix-halo-fine-tuning-toolboxes:all-latest
 ```
 ### Creating Toolbox - All Tools
 
 Run command below. This should start your toolbox named - 'toolbox-unsloth'
 ```
-toolbox create toolbox-all --image docker.io/shantur/amd-strix-halo-fine-tuning-toolboxes
+toolbox create toolbox-all --image docker.io/shantur/amd-strix-halo-fine-tuning-toolboxes:all-latest
 ```
 
 ### Entering Toolbox
